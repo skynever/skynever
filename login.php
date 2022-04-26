@@ -1,31 +1,45 @@
 <?php
-    $con = mysqli_connect("localhost", "root", "비밀번호", "user");
-    mysqli_query($con,'SET NAMES utf8');
+    require('dbcon.php');
 
-    $userID = $_POST["userID"];
-    $userPassword = $_POST["userPassword"];
+    $response = array('success' => true);
 
-    $statement = mysqli_prepare($con, "SELECT * FROM user WHERE userID = ? AND userPassword = ?");
-    mysqli_stmt_bind_param($statement, "ss", $userID, $userPassword);
-    mysqli_stmt_execute($statement);
+    $id = $_REQUEST['USERID'];
+    $password = $_REQUEST['USERPassword'];
 
+    if (empty($id)) {
+        $response['success'] = false;
+        $response['message'] = 'USERID is not set.';
+        echo json_encode($response);
+        return;
+    }
 
-    mysqli_stmt_store_result($statement);
-    mysqli_stmt_bind_result($statement, $userID, $userPassword, $userName, $userAge);
+    if (empty($password)) {
+        $response['success'] = false;
+        $response['message'] = 'USERPassword is not set.';
+        echo json_encode($response);
+        return;
+    }
 
-    $response = array();
-    $response["success"] = false;
+    $stmt = $con->prepare('SELECT * FROM Chemist WHERE USERID=:id LIMIT 1');
+    $stmt->bindParam(':id', $id);
+    $stmt->execute();
 
-    while(mysqli_stmt_fetch($statement)) {
-        $response["success"] = true;
-        $response["userID"] = $userID;
-        $response["userPassword"] = $userPassword;
-        $response["userName"] = $userName;
-        $response["userAge"] = $userAge;
+    $user = $stmt->fetch();
+
+    if ($user) {
+        if ($user['USERPassword'] === $password) {
+            $response['result'] = $user;
+
+        } else {
+            $response['success'] = false;
+            $response['message'] = 'Password is incorrect.';
+            $response['result'] = 'INCORRECT_PASSWORD';
+        }
+    } else {
+        $response['success'] = false;
+        $response['message'] = 'User not found.';
+        $response['result'] = 'USER_NOT_FOUND';
     }
 
     echo json_encode($response);
-
-
-
 ?>
