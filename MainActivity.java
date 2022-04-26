@@ -1,29 +1,31 @@
-package com.example.database;
+package com.example.resgister;
 
 import android.content.Intent;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.widget.TextView;
 
-public class MainActivity extends AppCompatActivity {
+import androidx.appcompat.app.AppCompatActivity;
 
-    private TextView tv_id, tv_pass;
+import com.example.resgister.data.User;
+
+public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        tv_id = findViewById(R.id.tv_id);
-        tv_pass = findViewById(R.id.tv_pass);
-
+        TextView idTextView = findViewById(R.id.id_text_view);
+        TextView passwordTextView = findViewById(R.id.password_text_view);
+        TextView companyTextView = findViewById(R.id.company_text_view);
+        TextView phoneTextView = findViewById(R.id.phone_text_view);
 
         Intent intent = getIntent();
-        String userID = intent.getStringExtra("userID");
-        String userPass = intent.getStringExtra("userPass");
+        User user = intent.getParcelableExtra("ARG_USER");
 
-        tv_id.setText(userID);
-        tv_pass.setText(userPass);
-
+        idTextView.setText(user.getId());
+        passwordTextView.setText(user.getPassword());
+        companyTextView.setText(user.getCompany());
+        phoneTextView.setText(user.getPhone());
     }
 }
