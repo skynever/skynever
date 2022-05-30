@@ -9,17 +9,17 @@ import com.android.volley.toolbox.StringRequest;
 import java.util.HashMap;
 import java.util.Map;
 
-public class LoginRequest extends StringRequest {
+public class FindPasswordRequest extends StringRequest {
     //서버 URL
-    final static private String URL = "http://skynever.dothome.co.kr/login.php";
+    final static private String URL = "http://skynever.dothome.co.kr/find_password.php";
     private final Map<String, String> map;
 
-    public LoginRequest(String id, String password, Response.Listener<String> listener) {
+    public FindPasswordRequest(String id, String name, Response.Listener<String> listener) {
         super(Method.POST, URL, listener, null);
 
         map = new HashMap<>();
         map.put("id", id);
-        map.put("password", password);
+        map.put("name", name);
     }
 
     @Nullable

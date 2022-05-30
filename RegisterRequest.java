@@ -1,4 +1,6 @@
-package com.example.database;
+package com.example.resgister.request;
+
+import androidx.annotation.Nullable;
 
 import com.android.volley.AuthFailureError;
 import com.android.volley.Response;
@@ -8,24 +10,31 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class RegisterRequest extends StringRequest {
+    //서버 URL
+    final static private String URL = "http://skynever.dothome.co.kr/insert.php";
+    private final Map<String, String> map;
 
-    // 서버 URL 설정 ( PHP 파일 연동 )
-    final static private String URL = "http://www.skynever.dothome.co.kr/myadmin/Register.php";
-    private Map<String, String> map;
-
-
-    public RegisterRequest(String userID, String userPassword, String userName, int userAge, Response.Listener<String> listener) {
-        super(Method.POST, URL, listener, null);
+    public RegisterRequest(String type,
+                           String id,
+                           String password,
+                           String name,
+                           String phone,
+                           Response.Listener<String> listener,
+                           Response.ErrorListener errorListener) {
+        super(Method.POST, URL, listener, errorListener);
 
         map = new HashMap<>();
-        map.put("userID", userID);
-        map.put("userPassword", userPassword);
-        map.put("userName", userName);
-        map.put("userAge", userAge + "");
+        map.put("type", type);
+        map.put("id", id);
+        map.put("password", password);
+        map.put("name", name);
+        map.put("phone", phone);
     }
 
+    @Nullable
     @Override
     protected Map<String, String> getParams() throws AuthFailureError {
         return map;
     }
 }
+
